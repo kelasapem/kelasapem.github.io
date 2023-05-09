@@ -1,0 +1,171 @@
+<!DOCTYPE HTML><html>
+<!-- Rui Santos - Complete project details at https://RandomNerdTutorials.com
+
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files.
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software. -->
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <body style="background:white;">
+  <style type="text/css">
+  .judul{
+  color:brown;}
+  .sub{color:black;}
+  <style>
+    body {
+      min-width: 310px;
+      max-width: 800px;
+      height: 400px;
+      margin: 0 auto;
+    }
+ 
+    h2 {
+      font-family: Arial;
+      font-size: 2.5rem;
+      text-align: center;
+    }
+  h3 {
+     font-family: TimesNewRoman;
+     font-size: 1.5rem;
+     text-align:center;
+  </style>
+</head>
+<body>
+  <h2 class="judul">Interfacing Sensor Thermocouple with ESP32</h2>
+  <h3 class="sub">Dibuat oleh: Mochamad Rizki Ramdhani</h3>
+  <div id="chart-temperature" class="container"></div>
+  <div id="chart-humidity" class="container"></div>
+  <div id="chart-ArduinoC" class="container"></div>
+  
+</body>
+<script>
+var baris1=2
+var baris=2
+var chartAC = new Highcharts.Chart({
+  chart:{ renderTo : 'chart-ArduinoC' },
+  title: { text: 'Arduino' },
+  series: [{
+    showInLegend: false,
+    data: []
+  }],
+  plotOptions: {
+    line: { animation: false,
+      dataLabels: { enabled: true }
+    },
+    series: { color: '#059e8a' }
+  },
+  xAxis: { type: 'datetime',
+    dateTimeLabelFormats: { second: '%H:%M:%S' }
+  },
+  yAxis: {
+    title: { text: 'Temperature (Celsius)' }
+    //title: { text: 'Temperature (Fahrenheit)' }
+  },
+  credits: { enabled: false }
+});
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var x = (new Date()).getTime(),
+          y = parseFloat(this.responseText);
+      //console.log(this.responseText);
+      if(chartAC.series[0].data.length > 40) {
+        chartAC.series[0].addPoint([x, y], true, true, true);
+      } else {
+        chartAC.series[0].addPoint([x, y], true, false, true);
+      }
+    }
+  };
+  xhttp.open("GET","http://192.168.0.100/readvalue1", true);
+  xhttp.send();
+}, 500 ) ;
+
+var chartT = new Highcharts.Chart({
+  chart:{ renderTo : 'chart-temperature' },
+  title: { text: 'Temperature' },
+  series: [{
+    showInLegend: false,
+    data: []
+  }],
+  plotOptions: {
+    line: { animation: false,
+      dataLabels: { enabled: true }
+    },
+    series: { color: '#059e8a' }
+  },
+  xAxis: { type: 'datetime',
+    dateTimeLabelFormats: { second: '%H:%M:%S' }
+  },
+  yAxis: {
+    title: { text: 'Temperature (Celsius)' }
+    //title: { text: 'Temperature (Fahrenheit)' }
+  },
+  credits: { enabled: false }
+});
+
+
+var chartH = new Highcharts.Chart({
+  chart:{ renderTo:'chart-humidity' },
+  title: { text: 'Temperature' },
+  series: [{
+    showInLegend: false,
+    data: []
+  }],
+  plotOptions: {
+    line: { animation: false,
+      dataLabels: { enabled: true }
+    }
+  },
+  xAxis: {
+    type: 'datetime',
+    dateTimeLabelFormats: { second: '%H:%M:%S' }
+  },
+  yAxis: {
+    title: { text: 'Celcius (C)' }
+  },
+  credits: { enabled: false }
+});
+setInterval(function ( ) {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var data=this.responseText;
+	  var y = parseFloat (data.split(";")[1])
+	  var y1= parseFloat (data.split(";")[2])
+	 if (!isNaN(y)){baris1++
+	  var x = (new Date()).getTime()       
+		
+		 
+      //console.log(this.responseText);
+      if(chartH.series[0].data.length > 40) {
+        chartH.series[0].addPoint([x, y], true, true, true);
+      } else {
+        chartH.series[0].addPoint([x, y], true, false, true);
+      }
+	  if(chartT.series[0].data.length > 40) {
+        chartT.series[0].addPoint([x, y1], true, true, true);
+      } else {
+        chartT.series[0].addPoint([x, y1], true, false, true);
+      }
+	  
+	  
+   }
+ 
+   }
+  };
+  
+ xhttp.open("GET","https://script.google.com/macros/s/AKfycbzd9T-ijl0IeSgaSwbPKLDjEvvtIUgG5YsO4yov20Fz4cVMGSaGgzm3V2pyltOKlSic/exec?read="+baris1, true);
+  xhttp.send();
+}, 1000 ) ;
+
+
+
+
+</script>
+</html>
+
+)***";
